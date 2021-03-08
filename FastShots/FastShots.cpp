@@ -114,23 +114,22 @@ void FastShots::onTick(CarWrapper caller) {
 	if (!ball) {
 		return;
 	}
+	// end of goal is +-5200
+	auto ballLoc = ball.GetLocation();
+	auto velocity = ball.GetVelocity();
+	auto speed = velocity.magnitude();
+	// converts speed to km/h from cm/h
+	speed *= 0.036f;
+	speed += 0.5f;
 
-	auto rb = ball.GetOldRBState();
-	float new_speed_sq = rb.LinearVelocity.X * rb.LinearVelocity.X + rb.LinearVelocity.Y * rb.LinearVelocity.Y;
-
-	if (old_speed_sq >= 0.0f) {
-		// end of goal is +-5200
-		auto ballLoc = ball.GetLocation();
-		auto velocity = ball.GetVelocity();
-		if (new_speed_sq > old_speed_sq) {
-			float total_speed = std::sqrt(new_speed_sq + rb.LinearVelocity.Z * rb.LinearVelocity.Z);
-			if ((ballLoc.Y > 5200 && velocity.Y < 0) || (ballLoc.Y < -5200 && velocity.Y > 0)) {
-				if (total_speed < min_speed) {
-					velocity.Y = -velocity.Y;
-					ball.SetVelocity(velocity);
-				}
-			}
+	//if (new_speed_sq > old_speed_sq) {
+	//if ((ballLoc.Y >= 5000 ) || (ballLoc.Y <= -5000 )) {
+	bool positive = ballLoc.Y > 0;
+	if ((ballLoc.Y > 5200 && velocity.Y > 0) || (ballLoc.Y < -5200 && velocity.Y < 0)) {
+		cvarManager->log("shot taken at " + std::to_string(speed));
+		if (speed < min_speed) {
+			velocity.Y = -velocity.Y;
+			ball.SetVelocity(velocity);
 		}
 	}
-	old_speed_sq = new_speed_sq;
 }
