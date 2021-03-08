@@ -5,8 +5,10 @@
 BAKKESMOD_PLUGIN(FastShots, "Fast Shots Plugin", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
-float old_speed_sq = 0.0f;
-float min_speed = 100.f;
+float blueMinSpeed = 100.f;
+float orangeMinSpeed = 100.f;
+bool blueEnabled = false;
+bool orangeEnabled = false;
 
 void FastShots::onLoad()
 {
@@ -22,42 +24,21 @@ void FastShots::onLoad()
 		}
 			});
 
-	cvarManager->registerCvar("fast_shots_min_speed", "100", "minimum shot speed allowed")
+	cvarManager->registerCvar("fast_shots_blue", "0", "makes the blue team take fast shots", true, true, 0, true, 1)
+		.addOnValueChanged([this](std::string, CVarWrapper cvar) { blueEnabled = cvar.getBoolValue(); });
+
+	cvarManager->registerCvar("fast_shots_blue_min_speed", "100", "minimum shot speed allowed for blue")
 		.addOnValueChanged([this](std::string, CVarWrapper cvar) {
-		min_speed = cvar.getFloatValue();
+		blueMinSpeed = cvar.getFloatValue();
 			});
-	//cvarManager->log("Plugin loaded!");
 
-	//cvarManager->registerNotifier("my_aweseome_notifier", [&](std::vector<std::string> args) {
-	//	cvarManager->log("Hello notifier!");
-	//}, "", 0);
+	cvarManager->registerCvar("fast_shots_orange", "0", "makes the orange team take fast shots", true, true, 0, true, 1)
+		.addOnValueChanged([this](std::string, CVarWrapper cvar) { orangeEnabled = cvar.getBoolValue(); });
 
-	//auto cvar = cvarManager->registerCvar("template_cvar", "hello-cvar", "just a example of a cvar");
-	//auto cvar2 = cvarManager->registerCvar("template_cvar2", "0", "just a example of a cvar with more settings", true, true, -10, true, 10 );
-
-	//cvar.addOnValueChanged([this](std::string cvarName, CVarWrapper newCvar) {
-	//	cvarManager->log("the cvar with name: " + cvarName + " changed");
-	//	cvarManager->log("the new value is:" + newCvar.getStringValue());
-	//});
-
-	//cvar2.addOnValueChanged(std::bind(&FastShots::YourPluginMethod, this, _1, _2));
-
-	// enabled decleared in the header
-	//enabled = std::make_shared<bool>(false);
-	//cvarManager->registerCvar("TEMPLATE_Enabled", "0", "Enable the TEMPLATE plugin", true, true, 0, true, 1).bindTo(enabled);
-
-	//cvarManager->registerNotifier("NOTIFIER", [this](std::vector<std::string> params){FUNCTION();}, "DESCRIPTION", PERMISSION_ALL);
-	//cvarManager->registerCvar("CVAR", "DEFAULTVALUE", "DESCRIPTION", true, true, MINVAL, true, MAXVAL);//.bindTo(CVARVARIABLE);
-	//gameWrapper->HookEvent("FUNCTIONNAME", std::bind(&TEMPLATE::FUNCTION, this));
-	//gameWrapper->HookEventWithCallerPost<ActorWrapper>("FUNCTIONNAME", std::bind(&FastShots::FUNCTION, this, _1, _2, _3));
-	//gameWrapper->RegisterDrawable(bind(&TEMPLATE::Render, this, std::placeholders::_1));
-
-
-	//gameWrapper->HookEvent("Function TAGame.Ball_TA.Explode", [this](std::string eventName) {
-	//	cvarManager->log("Your hook got called and the ball went POOF");
-	//});
-	// You could also use std::bind here
-	//gameWrapper->HookEvent("Function TAGame.Ball_TA.Explode", std::bind(&FastShots::YourPluginMethod, this);
+	cvarManager->registerCvar("fast_shots_orange_min_speed", "100", "minimum shot speed allowed for orange")
+		.addOnValueChanged([this](std::string, CVarWrapper cvar) {
+		orangeMinSpeed = cvar.getFloatValue();
+			});
 }
 
 void FastShots::onUnload()
@@ -99,35 +80,37 @@ void FastShots::onTick(CarWrapper caller) {
 
 	if (!sw) return;
 
-	CarWrapper myCar = gameWrapper->GetLocalCar();
-
-	if (myCar.IsNull()) {
-		return;
-	}
-
-	if (caller.memory_address != myCar.memory_address) {
-		return;
-	}
-
 	BallWrapper ball = sw.GetBall();
 
 	if (!ball) {
 		return;
 	}
+
 	// end of goal is +-5200
 	auto ballLoc = ball.GetLocation();
 	auto velocity = ball.GetVelocity();
 	auto speed = velocity.magnitude();
-	// converts speed to km/h from cm/h
+	// converts speed to km/h from cm/s
 	speed *= 0.036f;
 	speed += 0.5f;
 
-	//if (new_speed_sq > old_speed_sq) {
-	//if ((ballLoc.Y >= 5000 ) || (ballLoc.Y <= -5000 )) {
-	bool positive = ballLoc.Y > 0;
-	if ((ballLoc.Y > 5200 && velocity.Y > 0) || (ballLoc.Y < -5200 && velocity.Y < 0)) {
-		cvarManager->log("shot taken at " + std::to_string(speed));
-		if (speed < min_speed) {
+	if (ballLoc.Y > 5150 && velocity.Y > 0) {
+		// ball is going in orange net
+		cvarManager->log("shot taken at orange net " + std::to_string(speed));
+		if (!blueEnabled) {
+			return;
+		}
+		if (speed < blueMinSpeed) {
+			velocity.Y = -velocity.Y;
+			ball.SetVelocity(velocity);
+		}
+	} else if (ballLoc.Y < -5150 && velocity.Y < 0) {
+		// ball is going in blue net
+		cvarManager->log("shot taken at blue net " + std::to_string(speed));
+		if (!orangeEnabled) {
+			return;
+		}
+		if (speed < orangeMinSpeed) {
 			velocity.Y = -velocity.Y;
 			ball.SetVelocity(velocity);
 		}
