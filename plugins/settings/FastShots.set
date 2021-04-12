@@ -1,5 +1,5 @@
 Fast Shots
-9|Force either team to score shots with a minimum speed. Shoot too slow and it bounces out!
+9|Force either team to score shots with a minimum or maximum speed. Shoot too slow and it bounces out!
 9|The current world record for shot speed without mutators at the time of this writing is 211. 
 9|Be aware that numbers near or above 200 may be impossible to score.
 9|Also be aware that if the maximum speed is below or equal to the minimum, it will be impossible to score
@@ -18,20 +18,20 @@ Fast Shots
 4|Orange team maximum shot speed|fast_shots_max_orange|0|220
 8|
 9|Automatic updating
-9|Only minimun or maximum speeds can be automatically changed, not both at once
+9|Only minimum or maximum speeds can be automatically changed for a team, not both at once
 9|Make sure to set the minimum speeds for both teams to 0 or maximum to 220 before each match
 8|
 9|Make each shot in the lobby need to beat the last shot speed by either team
 1|Lobby update minimum speed|fast_shots_update_min_all
 9|Make each individual team beat their previous shot speed
-1|Orange update minimum speed|fast_shots_update_min_orange
 1|Blue update minimum speed|fast_shots_update_min_blue
+1|Orange update minimum speed|fast_shots_update_min_orange
 8|
 9|Make each shot in the lobby need to be slower than the last shot speed by either team
 1|Lobby update maximum speed|fast_shots_update_max_all
 9|Make each individual team go slower than their previous shot speed
-1|Orange update maximum speed|fast_shots_update_max_orange
 1|Blue update maximum speed|fast_shots_update_max_blue
+1|Orange update maximum speed|fast_shots_update_max_orange
 8|
 9|Plugin commissioned by Rocket Sledge
 9|youtube.com/c/rocketSledge98

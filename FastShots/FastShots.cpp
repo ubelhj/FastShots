@@ -68,7 +68,6 @@ void FastShots::onLoad()
 				cvarManager->executeCommand("fast_shots_update_min_all 0");
 
 				cvarManager->executeCommand("fast_shots_update_max_blue 0");
-				cvarManager->executeCommand("fast_shots_update_max_orange 0");
 				cvarManager->executeCommand("fast_shots_update_max_all 0");
 			}});
 
@@ -80,7 +79,6 @@ void FastShots::onLoad()
 			if (setOrangeMin) {
 				cvarManager->executeCommand("fast_shots_update_min_all 0");
 
-				cvarManager->executeCommand("fast_shots_update_max_blue 0");
 				cvarManager->executeCommand("fast_shots_update_max_orange 0");
 				cvarManager->executeCommand("fast_shots_update_max_all 0");
 			}});
@@ -106,7 +104,6 @@ void FastShots::onLoad()
 
 			if (setBlueMax) {
 				cvarManager->executeCommand("fast_shots_update_min_blue 0");
-				cvarManager->executeCommand("fast_shots_update_min_orange 0");
 				cvarManager->executeCommand("fast_shots_update_min_all 0");
 
 				cvarManager->executeCommand("fast_shots_update_max_all 0");
@@ -118,7 +115,6 @@ void FastShots::onLoad()
 			setOrangeMax = cvar.getBoolValue();
 
 			if (setOrangeMax) {
-				cvarManager->executeCommand("fast_shots_update_min_blue 0");
 				cvarManager->executeCommand("fast_shots_update_min_orange 0");
 				cvarManager->executeCommand("fast_shots_update_min_all 0");
 
