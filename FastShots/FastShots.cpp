@@ -7,6 +7,8 @@ BAKKESMOD_PLUGIN(FastShots, "Fast Shots Plugin", plugin_version, PLUGINTYPE_FREE
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 float blueMinSpeed = 100.f;
 float orangeMinSpeed = 100.f;
+float blueMaxSpeed = 300.f;
+float orangeMaxSpeed = 300.f;
 bool blueEnabled = false;
 bool orangeEnabled = false;
 
@@ -27,7 +29,7 @@ void FastShots::onLoad()
 	cvarManager->registerCvar("fast_shots_blue", "0", "makes the blue team take fast shots", true, true, 0, true, 1)
 		.addOnValueChanged([this](std::string, CVarWrapper cvar) { blueEnabled = cvar.getBoolValue(); });
 
-	cvarManager->registerCvar("fast_shots_blue_min_speed", "100", "minimum shot speed allowed for blue")
+	cvarManager->registerCvar("fast_shots_blue_min_speed", std::to_string(blueMaxSpeed), "minimum shot speed allowed for blue")
 		.addOnValueChanged([this](std::string, CVarWrapper cvar) {
 		blueMinSpeed = cvar.getFloatValue();
 			});
@@ -35,9 +37,19 @@ void FastShots::onLoad()
 	cvarManager->registerCvar("fast_shots_orange", "0", "makes the orange team take fast shots", true, true, 0, true, 1)
 		.addOnValueChanged([this](std::string, CVarWrapper cvar) { orangeEnabled = cvar.getBoolValue(); });
 
-	cvarManager->registerCvar("fast_shots_orange_min_speed", "100", "minimum shot speed allowed for orange")
+	cvarManager->registerCvar("fast_shots_orange_min_speed", std::to_string(orangeMinSpeed), "minimum shot speed allowed for orange")
 		.addOnValueChanged([this](std::string, CVarWrapper cvar) {
 		orangeMinSpeed = cvar.getFloatValue();
+			});
+
+	cvarManager->registerCvar("fast_shots_orange_max_speed", std::to_string(orangeMaxSpeed), "maximum shot speed allowed for orange")
+		.addOnValueChanged([this](std::string, CVarWrapper cvar) {
+		orangeMaxSpeed = cvar.getFloatValue();
+			});
+
+	cvarManager->registerCvar("fast_shots_blue_max_speed", std::to_string(blueMaxSpeed), "maximum shot speed allowed for blue")
+		.addOnValueChanged([this](std::string, CVarWrapper cvar) {
+		blueMaxSpeed = cvar.getFloatValue();
 			});
 }
 
@@ -94,23 +106,23 @@ void FastShots::onTick(CarWrapper caller) {
 	speed *= 0.036f;
 	speed += 0.5f;
 
-	if (ballLoc.Y > 5150 && velocity.Y > 0) {
+	if (ballLoc.Y > 5028 && velocity.Y > 0) {
 		// ball is going in orange net
 		cvarManager->log("shot taken at orange net " + std::to_string(speed));
 		if (!blueEnabled) {
 			return;
 		}
-		if (speed < blueMinSpeed) {
+		if (speed < blueMinSpeed || speed > blueMaxSpeed) {
 			velocity.Y = -velocity.Y;
 			ball.SetVelocity(velocity);
 		}
-	} else if (ballLoc.Y < -5150 && velocity.Y < 0) {
+	} else if (ballLoc.Y < -5028 && velocity.Y < 0) {
 		// ball is going in blue net
 		cvarManager->log("shot taken at blue net " + std::to_string(speed));
 		if (!orangeEnabled) {
 			return;
 		}
-		if (speed < orangeMinSpeed) {
+		if (speed < orangeMinSpeed || speed > orangeMaxSpeed) {
 			velocity.Y = -velocity.Y;
 			ball.SetVelocity(velocity);
 		}
