@@ -18,6 +18,7 @@ class FastShots: public BakkesMod::Plugin::BakkesModPlugin/*, public BakkesMod::
 
 	void onTick(CarWrapper caller);
 	ServerWrapper getSW();
+	void setNewSpeed();
 
 	void hookEvents();
 	void unhookEvents();
