@@ -1,37 +1,37 @@
-Fast Shots
-9|Force either team to score shots with a minimum or maximum speed. Shoot too slow and it bounces out!
+Fast or Slow Goal Filter
+9|Force either team to score shots with a minimum or maximum speed. Shoot too slow or too fast and it bounces out!
 9|The current world record for shot speed without mutators at the time of this writing is 211. 
 9|Be aware that numbers near or above 200 may be impossible to score.
 9|Also be aware that if the maximum speed is below or equal to the minimum, it will be impossible to score
 9|If the minimum speed is above the maximum, it will also be impossible to score
 8|
-1|Enable plugin|fast_shots_enabled
+1|Enable plugin|fsgf_enabled
 8|
-1|Enable for blue team|fast_shots_blue
+1|Enable for blue team|fsgf_blue
 9|This applies for any shots on the orange net, including own goals by orange
-4|Blue team minimum shot speed|fast_shots_min_blue|0|220
-4|Blue team maximum shot speed|fast_shots_max_blue|0|220
+4|Blue team minimum shot speed|fsgf_min_blue|0|220
+4|Blue team maximum shot speed|fsgf_max_blue|0|220
 8|
-1|Enable for orange team|fast_shots_orange
+1|Enable for orange team|fsgf_orange
 9|This applies for any shots on the blue net, including own goals by blue
-4|Orange team minimum shot speed|fast_shots_min_orange|0|220
-4|Orange team maximum shot speed|fast_shots_max_orange|0|220
+4|Orange team minimum shot speed|fsgf_min_orange|0|220
+4|Orange team maximum shot speed|fsgf_max_orange|0|220
 8|
 9|Automatic updating
 9|Only minimum or maximum speeds can be automatically changed for a team, not both at once
 9|Make sure to set the minimum speeds for both teams to 0 or maximum to 220 before each match
 8|
 9|Make each shot in the lobby need to beat the last shot speed by either team
-1|Lobby update minimum speed|fast_shots_update_min_all
+1|Lobby update minimum speed|fsgf_update_min_all
 9|Make each individual team beat their previous shot speed
-1|Blue update minimum speed|fast_shots_update_min_blue
-1|Orange update minimum speed|fast_shots_update_min_orange
+1|Blue update minimum speed|fsgf_update_min_blue
+1|Orange update minimum speed|fsgf_update_min_orange
 8|
 9|Make each shot in the lobby need to be slower than the last shot speed by either team
-1|Lobby update maximum speed|fast_shots_update_max_all
+1|Lobby update maximum speed|fsgf_update_max_all
 9|Make each individual team go slower than their previous shot speed
-1|Blue update maximum speed|fast_shots_update_max_blue
-1|Orange update maximum speed|fast_shots_update_max_orange
+1|Blue update maximum speed|fsgf_update_max_blue
+1|Orange update maximum speed|fsgf_update_max_orange
 8|
 9|Plugin commissioned by Rocket Sledge
 9|youtube.com/c/rocketSledge98
